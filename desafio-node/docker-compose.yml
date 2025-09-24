@@ -1,0 +1,43 @@
+services:
+  db:
+    image: mysql:5.7
+    container_name: node-db
+    restart: always
+    tty: true
+    command: --innodb-use-native-aio=0
+    volumes: 
+      - ./db/mysql:/var/lib/mysql
+      - ./db/scripts:/docker-entrypoint-initdb.d
+
+    environment: 
+      - MYSQL_DATABASE=desafio-fullcycle
+      - MYSQL_ROOT_PASSWORD=root
+    networks: 
+      - desafio-node
+
+  node: 
+    build:
+      context: ./node
+      dockerfile: Dockerfile
+    container_name: node-app
+    image: quirogabriel/node:desafio
+    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s
+    command: node index.js
+    networks:
+      - desafio-node
+    ports:
+      - "3000:3000"
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: node-nginx
+    image: quirogabriel/nginx:desafio
+    networks:
+      - desafio-node
+    ports:
+      - "8080:80"
+networks:
+  desafio-node:
+    driver: bridge
