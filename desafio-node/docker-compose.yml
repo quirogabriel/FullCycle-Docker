@@ -23,6 +23,8 @@ services:
     image: quirogabriel/node:desafio
     entrypoint: dockerize -wait tcp://db:3306 -timeout 20s
     command: node index.js
+    volumes:
+      - ./node:/usr/src/app
     networks:
       - desafio-node
     ports:
