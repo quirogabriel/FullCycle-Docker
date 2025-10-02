@@ -1,2 +1,5 @@
 # Ignorar diretórios de dados do MySQL
 desafio-node/db/mysql
+
+desafio-node/node/package-lock.json
+desafio-node/node/node_modules
